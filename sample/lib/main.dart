@@ -32,6 +32,11 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   ChessBoardController controller = ChessBoardController();
   String _fen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
+  List<BoardArrow> arrows = [];
+
+  void possible_moves() {
+    controller.getPossibleMoves();
+  }
 
   @override
   void initState() {
@@ -50,16 +55,42 @@ class _MyHomePageState extends State<MyHomePage> {
         centerTitle: true,
         title: const Text("Chess Game"),
       ),
-      body: Center(
-        child: ChessBoard(
-          onMove: () => {},
-          controller: controller,
-          boardColor: BoardColor.darkBrown,
-          boardOrientation: PlayerColor.white,
-          arrows: [
-            BoardArrow(from: src, to: dest, color: Colors.red.withOpacity(0.5))
-          ],
-        ),
+      body: Column(
+        children: [
+          SizedBox(height: 120,),
+          Center(
+            child: ChessBoard(
+              onMove: () => {
+                print(controller.getFen()),
+                print(controller.getBoard()),
+                print(controller.game.san_moves().toString()),
+              },
+              controller: controller,
+              boardColor: BoardColor.darkBrown,
+              boardOrientation: PlayerColor.white,
+              arrows: [
+                BoardArrow(
+                    from: src, to: dest, color: Colors.red.withOpacity(0.5)),
+                BoardArrow(
+                    from: "b4", to: "b5", color: Colors.red.withOpacity(0.5))
+              ],
+            ),
+          ),
+          Expanded(
+            child: ValueListenableBuilder<Chess>(
+              valueListenable: controller,
+              builder: (context, game, _) {
+                return Text(
+                  controller.getSan().fold(
+                        '',
+                        (previousValue, element) =>
+                            previousValue + '\n' + (element ?? ''),
+                      ),
+                );
+              },
+            ),
+          )
+        ],
       ),
     );
   }
