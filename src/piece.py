@@ -18,8 +18,8 @@ class Piece:
     def set_image(self,size=80):
         self.image=os.path.join(f'D:/GITHUB/Chess_Engine/assets/images/imgs-{size}px/{self.color}_{self.name}.png')
 
-    def add_moves(self,move):
-        self.add_moves.append(move)  
+    def add_move(self,move):
+        self.moves.append(move)  
 
 
 class Pawn(Piece):
