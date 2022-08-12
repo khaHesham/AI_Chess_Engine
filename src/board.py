@@ -13,6 +13,7 @@ class Board:
         self._create()
         self._add_pieces('white')
         self._add_pieces('black')
+        self.last_move = None
 
     def calc_move(self, piece, row, col):
         '''
@@ -79,45 +80,45 @@ class Board:
 
         def straight_moves(incrs):
             for inc in incrs:
-                row_increment,col_increment=inc
-                possible_move_row=row+row_increment
-                possible_move_col=col+col_increment
+                row_increment, col_increment = inc
+                possible_move_row = row+row_increment
+                possible_move_col = col+col_increment
 
                 while True:
-                    if Square.in_range(possible_move_row,possible_move_col):
-                        initial=Square(row,col)
-                        final=Square(possible_move_row,possible_move_col)
-                        move=Move(initial,final)
+                    if Square.in_range(possible_move_row, possible_move_col):
+                        initial = Square(row, col)
+                        final = Square(possible_move_row, possible_move_col)
+                        move = Move(initial, final)
 
-                        #continue looping
+                        # continue looping
                         if self.squares[possible_move_row][possible_move_col].isempty():
-                            #append new move 
+                            # append new move
                             piece.add_move(move)
-                        #stop where you see the enemy
+                        # stop where you see the enemy
                         if self.squares[possible_move_row][possible_move_col].has_enemy_piece(piece.color):
                             piece.add_move(move)
                             break
-                        #friendly fire lol
+                        # friendly fire lol
                         if self.squares[possible_move_row][possible_move_col].has_team_piece(piece.color):
                             break
-                    #not in range
-                    else : 
+                    # not in range
+                    else:
                         break
 
-                    possible_move_row+=row_increment
-                    possible_move_col+=col_increment
+                    possible_move_row += row_increment
+                    possible_move_col += col_increment
 
         def king_moves():
 
-            adjacents=[
-                (row,col+1),
-                (row,col-1),
-                (row+1,col),
-                (row-1,col),
-                (row+1,col+1),
-                (row+1,col-1),
-                (row-1,col+1),
-                (row-1,col-1)
+            adjacents = [
+                (row, col+1),
+                (row, col-1),
+                (row+1, col),
+                (row-1, col),
+                (row+1, col+1),
+                (row+1, col-1),
+                (row-1, col+1),
+                (row-1, col-1)
             ]
 
             for possibleMove in adjacents:
@@ -131,7 +132,6 @@ class Board:
 
                         move = Move(initial, final)
                         piece.add_move(move)
-
 
         if isinstance(piece, Pawn):
             Pawn_moves()
@@ -153,15 +153,15 @@ class Board:
             ])
         if isinstance(piece, Queen):
             straight_moves([
-                    (-1, 1),  # up right
-                    (-1, -1),  # up left
-                    (1, 1),  # down right
-                    (1, -1),  # down left
-                    (-1, 0),  # up
-                    (0, 1),  # left
-                    (1, 0),  # down
-                    (0, -1)  # left
-                ]
+                (-1, 1),  # up right
+                (-1, -1),  # up left
+                (1, 1),  # down right
+                (1, -1),  # down left
+                (-1, 0),  # up
+                (0, 1),  # left
+                (1, 0),  # down
+                (0, -1)  # left
+            ]
             )
         if isinstance(piece, King):
             king_moves()
@@ -188,16 +188,30 @@ class Board:
         # bishops
         self.squares[row_other][2] = Square(row_other, 2, Bishop(color))
         self.squares[row_other][5] = Square(row_other, 5, Bishop(color))
-       
 
         # rooks
         self.squares[row_other][0] = Square(row_other, 0, Rook(color))
         self.squares[row_other][7] = Square(row_other, 7, Rook(color))
 
-    
         # queen & king
         self.squares[row_other][3] = Square(row_other, 3, Queen(color))
         self.squares[row_other][4] = Square(row_other, 4, King(color))
 
-        self.squares[5][4] = Square(5, 4, King(color))
+        
 
+    def move(self, piece, move):
+        initial = move.initial
+        final = move.final
+
+        # update the board
+        self.squares[initial.row][initial.col].piece = None
+        self.squares[final.row][final.col].piece = piece
+        piece.moved = True
+
+        # clear valid moves  --> because we changed position
+        piece.clear_moves()
+        
+        self.last_move = move
+
+    def valid_move(self, piece, move):
+        return move in piece.moves
