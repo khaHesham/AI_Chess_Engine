@@ -23,6 +23,7 @@ class Main:
         board=self.game.board
         while True:
             game.show_backgnd(screen)
+            game.show_last_move(screen)
             game.show_moves(screen)
             game.show_pieces(screen)
 
@@ -39,14 +40,16 @@ class Main:
 
                     if board.squares[clicked_row][clicked_col].has_piece():
                         piece=board.squares[clicked_row][clicked_col].piece
-                        board.calc_move(piece,clicked_row,clicked_col)
-                        dragger.save_initial(event.pos)
-                        dragger.drag_piece(piece)
 
-                        #show methods
-                        game.show_backgnd(screen)
-                        game.show_moves(screen)
-                        game.show_pieces(screen)
+                        if piece.color == game.next_player:
+                            board.calc_move(piece,clicked_row,clicked_col)
+                            dragger.save_initial(event.pos)
+                            dragger.drag_piece(piece)
+
+                            #show methods
+                            game.show_backgnd(screen)
+                            game.show_moves(screen)
+                            game.show_pieces(screen)
 
 
 
@@ -54,6 +57,7 @@ class Main:
                     if dragger.dragging:
                         dragger.update_mouse(event.pos)
                         game.show_backgnd(screen)
+                        game.show_last_move(screen)
                         game.show_moves(screen)
                         game.show_pieces(screen)
                         dragger.update_blit(screen)
@@ -75,7 +79,9 @@ class Main:
                             board.move(dragger.piece,move)
                             #show it
                             game.show_backgnd(screen)
+                            game.show_last_move(screen)
                             game.show_pieces(screen)
+                            game.next_turn()
 
                     dragger.undrag_piece()
 

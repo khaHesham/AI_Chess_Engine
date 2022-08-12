@@ -10,6 +10,7 @@ class Game:
     def __init__(self):
         self.board = Board()
         self.dragger=Dragger()
+        self.next_player='white'
 
     # show methods
     def show_backgnd(self, surface):
@@ -52,4 +53,16 @@ class Game:
                     color='#e60000'
                     rect=(move.final.col*SQSIZE, move.final.row*SQSIZE, SQSIZE, SQSIZE)
                     pygame.draw.rect(surface, color, rect)
-                
+    def show_last_move(self,surface):
+        if self.board.last_move:
+            initial=self.board.last_move.initial
+            final=self.board.last_move.final
+
+            for pos in [initial, final]:
+                color=(204,255,147) if (pos.row + pos.col)%2==0 else (172,195,51)
+                rect=(pos.col*SQSIZE,pos.row*SQSIZE,SQSIZE,SQSIZE)
+                pygame.draw.rect(surface,color,rect)
+
+
+    def next_turn(self):
+        self.next_player='white' if self.next_player=='black' else 'black'
