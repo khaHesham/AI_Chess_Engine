@@ -132,6 +132,53 @@ class Board:
 
                         move = Move(initial, final)
                         piece.add_move(move)
+            #castling
+            if not piece.moved:
+                left_rook=self.squares[row][0].piece
+                if isinstance(left_rook,Rook):
+                    if not left_rook.moved:
+                        for column in range(1,4):
+                            if self.squares[row][column].has_piece(): #castling cant be done
+                                break
+                            if column==3:
+                                piece.left_rook=left_rook
+
+                                #create rook move
+
+                                initial=Square(row,0)
+                                final=Square(row,3)
+                                move=Move(initial,final)
+                                left_rook.add_move(move)
+
+                                #create king move
+
+                                initial=Square(row,col)
+                                final=Square(row,2)
+                                move=Move(initial,final)
+
+                                piece.add_move(move)
+
+                right_rook=self.squares[row][7].piece
+                if isinstance(right_rook,Rook):
+                    if not right_rook.moved:
+                        for column in range(5,7):
+                            if self.squares[row][column].has_piece(): #castling cant be done
+                                break
+                            if column==6:
+                                piece.right_rook=right_rook
+
+                                #create rook move
+                                initial=Square(row,7)
+                                final=Square(row,5)
+                                move=Move(initial,final)
+                                right_rook.add_move(move)
+                                #create king move
+                                initial=Square(row,col)
+                                final=Square(row,6)
+                                move=Move(initial,final)
+                                
+                                piece.add_move(move)
+
 
         if isinstance(piece, Pawn):
             Pawn_moves()
@@ -198,6 +245,9 @@ class Board:
         self.squares[row_other][4] = Square(row_other, 4, King(color))
 
         
+    def castling(self,initial,final):
+        return abs(initial.col-final.col) == 2
+
 
     def move(self, piece, move):
         initial = move.initial
@@ -206,12 +256,28 @@ class Board:
         # update the board
         self.squares[initial.row][initial.col].piece = None
         self.squares[final.row][final.col].piece = piece
+
+        #pawn pormotion 
+        if isinstance(piece,Pawn):
+            self.check_pormotion(piece,final)
+
+        if isinstance(piece,King):
+            if self.castling(initial,final):
+                diff=final.col-initial.col
+                rook=piece.left_rook if (diff < 0) else piece.right_rook
+                self.move(rook,rook.moves[-1])
+
+
         piece.moved = True
 
         # clear valid moves  --> because we changed position
         piece.clear_moves()
-        
+
         self.last_move = move
 
     def valid_move(self, piece, move):
         return move in piece.moves
+
+    def check_pormotion(self,piece,final):
+        if final.row==0 or final.row==7:
+            self.squares[final.row][final.col].piece=Queen(piece.color)
