@@ -7,6 +7,7 @@ from game import Game
 from const import *
 from square import Square
 from move import Move
+import time
 
 class Main:
 
@@ -22,14 +23,27 @@ class Main:
         dragger=self.game.dragger
         board=self.game.board
         while True:
+            
             game.show_backgnd(screen)
             game.show_last_move(screen)
             game.show_moves(screen)
             game.show_pieces(screen)
 
-            # move_random=board.random_move()
-            # print(f'({move_random.initial.row},{move_random.initial.col}) - > ({move_random.final.row},{move_random.final.col})')
-            
+            # generating random moves:
+            piece,move_random=board.random_move(game.next_player)
+            # print(f'{piece.name}.({move_random.initial.row},{move_random.initial.col}) - > ({move_random.final.row},{move_random.final.col})')
+            captured=board.squares[move_random.final.row][move_random.final.col].has_piece()
+            board.move(piece,move_random)
+            board.set_true_en_passant(piece)
+            #playing sounds
+            # game.sound_effect(captured)
+            #show it
+            game.show_backgnd(screen)
+            game.show_last_move(screen)
+            game.show_pieces(screen)
+            game.next_turn()
+            time.sleep(0.2)
+
 
             if dragger.dragging:
                 dragger.update_blit(screen)
@@ -39,6 +53,7 @@ class Main:
                 if event.type==pygame.MOUSEBUTTONDOWN:
                     dragger.update_mouse(event.pos)
 
+                    
                     clicked_row=dragger.mouse_Y//SQSIZE
                     clicked_col=dragger.mouse_X//SQSIZE
 

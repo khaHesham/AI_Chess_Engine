@@ -47,18 +47,18 @@ class Board:
         return False
 
 
-    def random_move(self):
+    def random_move(self,color):
         temp_board=copy.deepcopy(self)
-        for row in range(ROWS):
-            for col in range(COLUMNS):
-                if not temp_board.squares[row][col].isempty:
-                    p=temp_board.squares[row][col].piece
-                    temp_board.calc_move(p,row,col,False)
         while True:
-            if not temp_board.squares[random.randrange(0,7)][random.randrange(0,7)].isempty():
-                p = temp_board.squares[random.randrange(0,7)][random.randrange(0,7)].piece 
-                if p.moves != []:
-                    return p.moves[random.randrange(0,len(p.moves))]          
+            row,col=random.randrange(0,8),random.randrange(0,8)
+            if not temp_board.squares[row][col].isempty() and Square.in_range(row,col):
+                p = temp_board.squares[row][col].piece
+                if p.color == color:
+                    temp_board.calc_move(p,row,col,True)
+                    for m in p.moves:
+                            n=random.randrange(0,len(p.moves))
+                            if not isinstance(p.moves[n].final.piece, King):
+                                return p,p.moves[n]          
 
 
 
@@ -102,7 +102,7 @@ class Board:
             steps = 1 if piece.moved else 2
 
             # vertical moves
-            start = row+piece.dir
+            start = row + piece.dir
             end = row + (piece.dir*(1+steps))
             for move_row in range(start, end, piece.dir):
                 if Square.in_range(move_row):
@@ -245,8 +245,7 @@ class Board:
                         move = Move(initial, final)
                         if bool:
                             if not self.in_check(piece,move):
-                                piece.add_move(move)
-                            # else :break
+                                piece.add_move(move)  
                         else:
                             piece.add_move(move)
 
@@ -361,7 +360,7 @@ class Board:
         # knights
         self.squares[row_other][1] = Square(row_other, 1, Knight(color))
         self.squares[row_other][6] = Square(row_other, 6, Knight(color))
-        # self.squares[3][3]=Square(3,3,Knight(color))
+        #self.squares[3][3]=Square(3,3,Knight(color))
 
         # bishops
         self.squares[row_other][2] = Square(row_other, 2, Bishop(color))
@@ -413,7 +412,7 @@ class Board:
 
 
         if isinstance(piece,King):
-            if self.castling(initial,final):
+            if self.castling(initial,final) and not testing:
                 diff=final.col-initial.col
                 rook=piece.left_rook if (diff < 0) else piece.right_rook
                 self.move(rook,rook.moves[-1])
