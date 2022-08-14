@@ -1,0 +1,3 @@
+
+class Ai:
+    pass

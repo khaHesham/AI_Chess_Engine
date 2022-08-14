@@ -27,6 +27,10 @@ class Main:
             game.show_moves(screen)
             game.show_pieces(screen)
 
+            # move_random=board.random_move()
+            # print(f'({move_random.initial.row},{move_random.initial.col}) - > ({move_random.final.row},{move_random.final.col})')
+            
+
             if dragger.dragging:
                 dragger.update_blit(screen)
 
@@ -42,7 +46,7 @@ class Main:
                         piece=board.squares[clicked_row][clicked_col].piece
 
                         if piece.color == game.next_player:
-                            board.calc_move(piece,clicked_row,clicked_col)
+                            board.calc_move(piece,clicked_row,clicked_col,bool=True)
                             dragger.save_initial(event.pos)
                             dragger.drag_piece(piece)
 
@@ -81,15 +85,25 @@ class Main:
 
                         #check if it is a move
                         if board.valid_move(dragger.piece,move):
+                            #normal capture
                             captured=board.squares[released_row][released_col].has_piece()
-
                             board.move(dragger.piece,move)
+
+                            board.set_true_en_passant(dragger.piece)
+
+                            #playing sounds
                             game.sound_effect(captured)
                             #show it
                             game.show_backgnd(screen)
                             game.show_last_move(screen)
                             game.show_pieces(screen)
                             game.next_turn()
+
+                            # if board.is_Game_Over():
+                            #     game.reset()
+                            #     game=self.game
+                            #     dragger=self.game.dragger
+                            #     board=self.game.board
 
                     dragger.undrag_piece()
 
