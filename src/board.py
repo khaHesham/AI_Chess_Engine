@@ -39,10 +39,9 @@ class Board:
             for col in range(COLUMNS):
                 if temp_board.squares[row][col].has_enemy_piece(piece.color):
                     p=temp_board.squares[row][col].piece
-                    temp_board.calc_move(p,row,col,bool=False)
+                    temp_board.calc_move(p,row,col,False)
                     for m in p.moves:
                         if isinstance(m.final.piece, King):
-                            print('checkmate')
                             return True
         return False
 
@@ -57,9 +56,8 @@ class Board:
                     temp_board.calc_move(p,row,col,True)
                     for m in p.moves:
                             n=random.randrange(0,len(p.moves))
-                            if not isinstance(p.moves[n].final.piece, King):
+                            if not isinstance(p.moves[n].final.piece, King) :
                                 return p,p.moves[n]          
-
 
 
     def calc_move(self, piece, row, col,bool=True):
@@ -178,7 +176,6 @@ class Board:
                             else:
                                 piece.add_move(move)
 
-
         def straight_moves(incrs):
             for inc in incrs:
                 row_increment, col_increment = inc
@@ -240,12 +237,15 @@ class Board:
                     if self.squares[possible_row][possible_col].isempty_or_enemy(piece.color):
                         # create a new move here
                         initial = Square(row, col)
-                        final = Square(possible_row, possible_col)
+                        final_piece=self.squares[possible_row][possible_col].piece
+                        final = Square(possible_row, possible_col,final_piece)
 
                         move = Move(initial, final)
+
                         if bool:
                             if not self.in_check(piece,move):
-                                piece.add_move(move)  
+                                piece.add_move(move) 
+                            # else: break
                         else:
                             piece.add_move(move)
 
@@ -308,7 +308,6 @@ class Board:
                                 else:
                                     piece.add_move(moveK)
                                     right_rook.add_move(moveR)
-
 
         if isinstance(piece, Pawn):
             Pawn_moves()
@@ -424,6 +423,7 @@ class Board:
         piece.clear_moves()
 
         self.last_move = move
+        
 
     def valid_move(self, piece, move):
         return move in piece.moves

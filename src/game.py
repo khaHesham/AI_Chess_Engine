@@ -16,7 +16,6 @@ class Game:
         self.next_player='white'
         self.hovered_sqr=None
         self.config=Config()
-
     # show methods
     def show_backgnd(self, surface):
         theme=self.config.theme
@@ -42,7 +41,6 @@ class Game:
                     lbl=self.config.font.render(Square.get_alphacol(col),1,color)
                     lbl_pos=(col*SQSIZE+SQSIZE-18,HEIGHT-25)
                     surface.blit(lbl,lbl_pos)
-
 
     def show_pieces(self, surface):
         for row in range(ROWS):
@@ -74,6 +72,7 @@ class Game:
                     color=theme.moves.dark
                     rect=(move.final.col*SQSIZE, move.final.row*SQSIZE, SQSIZE, SQSIZE)
                     pygame.draw.rect(surface, color, rect)
+    
     def show_last_move(self,surface):
         theme=self.config.theme
         if self.board.last_move:

@@ -42,7 +42,7 @@ class Main:
             game.show_last_move(screen)
             game.show_pieces(screen)
             game.next_turn()
-            time.sleep(0.2)
+            time.sleep(0.1)
 
 
             if dragger.dragging:
