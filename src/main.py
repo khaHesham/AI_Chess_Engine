@@ -16,12 +16,15 @@ class Main:
         self.screen=pygame.display.set_mode((WIDTH,HEIGHT))
         pygame.display.set_caption('Chess')
         self.game=Game()
+        
 
     def mainloop(self):
         screen=self.screen
         game=self.game
         dragger=self.game.dragger
         board=self.game.board
+        Random=False
+        
         while True:
             
             game.show_backgnd(screen)
@@ -30,19 +33,20 @@ class Main:
             game.show_pieces(screen)
 
             # generating random moves:
-            piece,move_random=board.random_move(game.next_player)
-            # print(f'{piece.name}.({move_random.initial.row},{move_random.initial.col}) - > ({move_random.final.row},{move_random.final.col})')
-            captured=board.squares[move_random.final.row][move_random.final.col].has_piece()
-            board.move(piece,move_random)
-            board.set_true_en_passant(piece)
-            #playing sounds
-            # game.sound_effect(captured)
-            #show it
-            game.show_backgnd(screen)
-            game.show_last_move(screen)
-            game.show_pieces(screen)
-            game.next_turn()
-            time.sleep(0.1)
+            if Random:
+                piece,move_random=board.random_move(game.next_player)
+                # print(f'{piece.name}.({move_random.initial.row},{move_random.initial.col}) - > ({move_random.final.row},{move_random.final.col})')
+                captured=board.squares[move_random.final.row][move_random.final.col].has_piece()
+                board.move(piece,move_random)
+                board.set_true_en_passant(piece)
+                #playing sounds
+                # game.sound_effect(captured)
+                #show it
+                game.show_backgnd(screen)
+                game.show_last_move(screen)
+                game.show_pieces(screen)
+                game.next_turn()
+                time.sleep(0.1)
 
 
             if dragger.dragging:
@@ -131,6 +135,8 @@ class Main:
                         game=self.game
                         dragger=self.game.dragger
                         board=self.game.board
+                    if event.key==pygame.K_u:
+                        Random= not Random
 
                 elif event.type==pygame.QUIT:
                     pygame.quit()
