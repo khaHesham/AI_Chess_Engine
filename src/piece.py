@@ -27,7 +27,7 @@ class Pawn(Piece):
     def __init__(self, color):
         self.en_passant=False
         self.dir = -1 if color == 'white' else 1
-        super().__init__('pawn', color, 1.0)
+        super().__init__('pawn', color, value=1.0)
 
 class Knight(Piece):
     def __init__(self,color):
@@ -49,4 +49,4 @@ class King(Piece):
     def __init__(self,color):
         self.left_rook=None
         self.right_rook=None
-        super().__init__('king', color, 100000)  #similar to inf
+        super().__init__('king', color, 100)  #similar to inf

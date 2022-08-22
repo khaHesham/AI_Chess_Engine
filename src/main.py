@@ -1,4 +1,5 @@
 
+from audioop import minmax
 from turtle import Screen
 import pygame
 import sys
@@ -7,6 +8,9 @@ from game import Game
 from const import *
 from square import Square
 from move import Move
+from ai import Ai
+from board import * 
+
 import time
 
 class Main:
@@ -24,6 +28,11 @@ class Main:
         dragger=self.game.dragger
         board=self.game.board
         Random=False
+        artificial=False
+
+        AI=Ai('white')
+        
+
         
         while True:
             
@@ -38,7 +47,9 @@ class Main:
                 # print(f'{piece.name}.({move_random.initial.row},{move_random.initial.col}) - > ({move_random.final.row},{move_random.final.col})')
                 captured=board.squares[move_random.final.row][move_random.final.col].has_piece()
                 board.move(piece,move_random)
+                
                 board.set_true_en_passant(piece)
+                print(f'{Board.evaluate(board,game.next_player)}  {piece.name} ')
                 #playing sounds
                 # game.sound_effect(captured)
                 #show it
@@ -48,6 +59,19 @@ class Main:
                 game.next_turn()
                 time.sleep(0.1)
 
+            if artificial:
+                if game.next_player =='white':
+                    eval,move,piece=AI.MinMax(board)
+                    print(eval)
+                    board.move(piece,move)
+                    
+                    game.show_backgnd(screen)
+                    game.show_last_move(screen)
+                    game.show_pieces(screen)
+                    game.next_turn()
+
+                
+            
 
             if dragger.dragging:
                 dragger.update_blit(screen)
@@ -55,8 +79,15 @@ class Main:
              
             for event in pygame.event.get():
                 if event.type==pygame.MOUSEBUTTONDOWN:
-                    dragger.update_mouse(event.pos)
 
+                    temp=board.get_ValidMoves(game.next_player)
+                    print(f'{game.next_player} {len(temp)}')
+                    for i in temp:
+                        print(f'{i.initial.row},{i.initial.col}  {i.final.row},{i.final.col}')
+                    temp.clear()
+
+                    dragger.update_mouse(event.pos)
+                   
                     
                     clicked_row=dragger.mouse_Y//SQSIZE
                     clicked_col=dragger.mouse_X//SQSIZE
@@ -107,8 +138,10 @@ class Main:
                             #normal capture
                             captured=board.squares[released_row][released_col].has_piece()
                             board.move(dragger.piece,move)
+                            print(f'{Board.evaluate(board,game.next_player)}  {dragger.piece.color} ')
 
                             board.set_true_en_passant(dragger.piece)
+                            
 
                             #playing sounds
                             game.sound_effect(captured)
@@ -137,6 +170,8 @@ class Main:
                         board=self.game.board
                     if event.key==pygame.K_u:
                         Random= not Random
+                    if event.key==pygame.K_i:
+                        artificial= not artificial
 
                 elif event.type==pygame.QUIT:
                     pygame.quit()

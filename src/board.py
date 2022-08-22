@@ -18,6 +18,7 @@ class Board:
         self._add_pieces('white')
         self._add_pieces('black')
         self.last_move = None
+        
 
     # def is_Game_Over(self):
     #     temp_board=copy.deepcopy(self)
@@ -47,17 +48,34 @@ class Board:
 
 
     def random_move(self,color):
-        temp_board=copy.deepcopy(self)
+        # temp_board=copy.deepcopy(self)
         while True:
             row,col=random.randrange(0,8),random.randrange(0,8)
-            if not temp_board.squares[row][col].isempty() and Square.in_range(row,col):
-                p = temp_board.squares[row][col].piece
+            if not self.squares[row][col].isempty() and Square.in_range(row,col):
+                p = self.squares[row][col].piece
                 if p.color == color:
-                    temp_board.calc_move(p,row,col,True)
+                    print(p.value)
+                    self.calc_move(p,row,col,True)
                     for m in p.moves:
                             n=random.randrange(0,len(p.moves))
                             if not isinstance(p.moves[n].final.piece, King) :
                                 return p,p.moves[n]          
+
+
+    def get_ValidMoves(self,color):   #get the state of the board now
+        valid_moves=[]
+        for row in range(ROWS):
+            for col in range(COLUMNS):
+                if not self.squares[row][col].isempty():
+                    piece=copy.deepcopy(self.squares[row][col].piece)
+                    if piece.color == color:
+                        self.calc_move(piece,row,col)
+                        for i in range(len(piece.moves)):  #add piece moves to the list of valid moves
+                            valid_moves.append(piece.moves[i])
+                    
+        return valid_moves
+        
+    
 
 
     def calc_move(self, piece, row, col,bool=True):
@@ -353,26 +371,29 @@ class Board:
         row_pawn, row_other = (6, 7) if color == 'white' else (1, 0)
 
         # pawns
-        for col in range(COLUMNS):
-            self.squares[row_pawn][col] = Square(row_pawn, col, Pawn(color))
+        # for col in range(COLUMNS):
+        #     self.squares[row_pawn][col] = Square(row_pawn, col, Pawn(color))
 
-        # knights
-        self.squares[row_other][1] = Square(row_other, 1, Knight(color))
-        self.squares[row_other][6] = Square(row_other, 6, Knight(color))
-        #self.squares[3][3]=Square(3,3,Knight(color))
+        # # knights
+        # self.squares[row_other][1] = Square(row_other, 1, Knight(color))
+        # self.squares[row_other][6] = Square(row_other, 6, Knight(color))
+        # #self.squares[3][3]=Square(3,3,Knight(color))
 
-        # bishops
-        self.squares[row_other][2] = Square(row_other, 2, Bishop(color))
-        self.squares[row_other][5] = Square(row_other, 5, Bishop(color))
+        # # bishops
+        # self.squares[row_other][2] = Square(row_other, 2, Bishop(color))
+        # self.squares[row_other][5] = Square(row_other, 5, Bishop(color))
 
-        # rooks
-        self.squares[row_other][0] = Square(row_other, 0, Rook(color))
-        self.squares[row_other][7] = Square(row_other, 7, Rook(color))
+        # # rooks
+        # self.squares[row_other][0] = Square(row_other, 0, Rook(color))
+        # self.squares[row_other][7] = Square(row_other, 7, Rook(color))
 
-        # queen & king
-        self.squares[row_other][3] = Square(row_other, 3, Queen(color))
+        # # queen & king
+        # self.squares[row_other][3] = Square(row_other, 3, Queen(color))
+        # self.squares[row_other][4] = Square(row_other, 4, King(color))
+
+        self.squares[row_pawn][2] = Square(row_pawn, 2, Pawn(color))
         self.squares[row_other][4] = Square(row_other, 4, King(color))
-
+        self.squares[row_other][3]=Square(row_other,3,Knight(color))
         
     def castling(self,initial,final):
         return abs(initial.col-final.col) == 2
@@ -426,8 +447,22 @@ class Board:
         
 
     def valid_move(self, piece, move):
+        print(piece.value)
         return move in piece.moves
 
     def check_pormotion(self,piece,final):
         if final.row==0 or final.row==7:
             self.squares[final.row][final.col].piece=Queen(piece.color)
+
+    @staticmethod
+    def evaluate(board,color):
+        cost=0
+        for row in range(ROWS):
+            for col in range(COLUMNS):
+                if not board.squares[row][col].isempty():
+                    p = board.squares[row][col].piece
+                    if p.color == color:
+                        print(cost)
+                        cost +=  p.value 
+        return cost
+
