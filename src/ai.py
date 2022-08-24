@@ -22,10 +22,10 @@ class Ai:
 
 
     def BestMove(self,depth,bd,color, alpha,beta, maximizingPlayer,pos):
-        print(f'another call depth : {depth}')
+        # print(f'another call depth : {depth}')
 
         if depth == 0 :  
-            print('finished the tree Backtracking now')
+            # print('finished the tree Backtracking now')
             c='white' if color=='black' else 'black'
             score=Board.evaluate(bd,c)     #return static evaluation of the board
             if maximizingPlayer:
@@ -42,11 +42,16 @@ class Ai:
             positions=Board.get_ValidMoves(bd,color)
             for pos in positions:     #move-> initial final 
                     p = pos.initial.piece 
-                    print(f'initial : {pos.initial.row},{pos.initial.col}  final : {pos.final.row},{pos.final.col} name: {p.name} color {color}')
+                    # print(f'initial : {pos.initial.row},{pos.initial.col}  final : {pos.final.row},{pos.final.col} name: {p.name} color {color}')
                     bd.move(p,pos,True)
 
                     c='white' if color=='black' else 'black'
                     eval,move,pe= self.BestMove(depth-1,bd,c,alpha,beta,False,pos)
+
+                    # undo=Move(pos.final,pos.initial)
+                
+                    # bd.move(p,undo,True)
+
                     #undo here this move iam the most stuped person on earth
                     if eval>=maxEval: #calling maximizes score
                         maxEval=eval
@@ -55,7 +60,7 @@ class Ai:
                         piece=pe
                     if alpha >= beta: # alpha-beta cutoff
                         break
-            print(f'alpha : {alpha}')
+            # print(f'alpha : {alpha}')
             return (maxEval,best_move,piece)
 
         else:  # minimizing player
@@ -68,12 +73,15 @@ class Ai:
             for pos in positions:
                 p =pos.initial.piece
 
-                print(f'initial : {pos.initial.row},{pos.initial.col}  final : {pos.final.row},{pos.final.col} name: {p.name} color {color}')
+                # print(f'initial : {pos.initial.row},{pos.initial.col}  final : {pos.final.row},{pos.final.col} name: {p.name} color {color}')
                 
                 bd.move(p,pos,True)  
 
                 c='white' if color=='black' else 'black'
                 eval,move,pe=self.BestMove(depth-1,bd,c,alpha,beta,True,pos)
+
+                # undo=Move(pos.final,pos.initial)
+                # bd.move(p,undo,True) 
                 
                 if eval <= minEval: #other minimizes his score
                     beta = eval
@@ -82,13 +90,13 @@ class Ai:
                     piece=pe
                 if alpha >= beta:
                     break 
-            print(f'beta : {beta}')       
+            # print(f'beta : {beta}')       
             return (minEval,best_move,piece)
 
 
     def MinMax(self,board):
         temp_board=copy.deepcopy(board)
-        e,m,p=self.BestMove(1,temp_board,self.color,-999999999,999999999, True,None)
+        e,m,p=self.BestMove(3,temp_board,self.color,-999999999,999999999, True,None)
         print(e)
         return (e,m,p)
 

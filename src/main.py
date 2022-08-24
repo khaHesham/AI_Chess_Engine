@@ -68,6 +68,7 @@ class Main:
                     game.show_last_move(screen)
                     game.show_pieces(screen)
                     game.next_turn()
+                    time.sleep(0.1)
 
                 
             
@@ -138,6 +139,8 @@ class Main:
                             #normal capture
                             captured=board.squares[released_row][released_col].has_piece()
                             board.move(dragger.piece,move)
+
+                             
                             
 
                             board.set_true_en_passant(dragger.piece)
