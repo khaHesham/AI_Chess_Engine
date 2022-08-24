@@ -59,10 +59,9 @@ class Main:
                 game.next_turn()
                 time.sleep(0.1)
 
-            if artificial:
+            if artificial:   #not working yet dont try it
                 if game.next_player =='white':
                     eval,move,piece=AI.MinMax(board)
-                    print(eval)
                     board.move(piece,move)
                     
                     game.show_backgnd(screen)
@@ -80,11 +79,12 @@ class Main:
             for event in pygame.event.get():
                 if event.type==pygame.MOUSEBUTTONDOWN:
 
-                    temp=board.get_ValidMoves(game.next_player)
-                    print(f'{game.next_player} {len(temp)}')
-                    for i in temp:
-                        print(f'{i.initial.row},{i.initial.col}  {i.final.row},{i.final.col}')
-                    temp.clear()
+                    # temp=board.get_ValidMoves(game.next_player)
+                    # print(f'{game.next_player} {len(temp)}')
+
+                    # for i in temp:
+                    #     print(f'{i.initial.row},{i.initial.col}  {i.final.row},{i.final.col}')
+                    # temp.clear()
 
                     dragger.update_mouse(event.pos)
                    
@@ -138,7 +138,7 @@ class Main:
                             #normal capture
                             captured=board.squares[released_row][released_col].has_piece()
                             board.move(dragger.piece,move)
-                            print(f'{Board.evaluate(board,game.next_player)}  {dragger.piece.color} ')
+                            
 
                             board.set_true_en_passant(dragger.piece)
                             

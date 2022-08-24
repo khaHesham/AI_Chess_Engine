@@ -8,7 +8,7 @@ class Piece:
         self.color=color
         self.moves=[] #valid moves
         self.moved=False
-        value_sign=1 if color=='white' else -1
+        value_sign=1 if color=='white' else -1   #else -1
         self.value=value * value_sign
         self.image=image
 
