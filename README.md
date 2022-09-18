@@ -1,5 +1,5 @@
 ## Chess Engine 
-implementing my own AI based chess engine unfortunally i didnt have time to complete the ai part yet but i will do in the future inshalah now its PvP Game
+implementing my own AI based chess engine unfortunally i didnt have time to complete the AI part yet but i will do it in the future inshalah now its PvP Game
 
 
  ## Demo 🎞
