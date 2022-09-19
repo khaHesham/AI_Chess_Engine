@@ -1,4 +1,25 @@
-# Chess_Engine
- implementing my own chess engine
- 
- ##<div style="width:100%;height:0;padding-bottom:151%;position:relative;"><iframe src="https://giphy.com/embed/3o85xvnSxCKJZaSYmI" width="100%" height="100%" style="position:absolute" frameBorder="0" class="giphy-embed" allowFullScreen></iframe></div><p><a href="https://giphy.com/gifs/benmarriott-chess-bishop-3o85xvnSxCKJZaSYmI">via GIPHY</a></p>
+## Chess Engine (pure OOP project)
+implementing my own AI based chess engine unfortunally i didnt have time to complete the AI part yet but i will do it in the future inshalah now its PvP Game
+
+
+ ## Demo 🎞
+![chess](https://user-images.githubusercontent.com/75990647/190928546-5f6bfb0c-65da-4359-ab20-120c03248f2e.gif)
+
+## to run:
+1. make sure you have python >= 3.8 installed
+2. !pip install pygame
+3. python main.py
+4. to start random moves press U
+5. to change theme press T
+6. to restart the game press R
+
+
+## To be implemented:
+1. Min-max Searching
+2. Alpha-beta pruning
+3. Null move heuristic
+4. Quiescence searching
+5. Static board evaluation functions
+6. Optimizing board evaluation functions via genetic algorithms
+7. monte carlo tree searching ... and more
+
