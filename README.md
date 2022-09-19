@@ -8,9 +8,10 @@ implementing my own AI based chess engine unfortunally i didnt have time to comp
 ## to run:
 1. make sure you have python >= 3.8 installed
 2. !pip install pygame
-3. to start random moves press U
-4. to change theme press T
-5. to restart the game press R
+3. python main.py
+4. to start random moves press U
+5. to change theme press T
+6. to restart the game press R
 
 
 ## To be implemented:
